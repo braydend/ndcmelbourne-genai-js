@@ -2,6 +2,7 @@ import { stdin as input, stdout as output } from "node:process";
 import { createInterface } from "node:readline/promises";
 
 import { History } from "./history.js";
+import {genAI} from "./bot.js";
 
 export async function main() {
   const history = new History();
@@ -22,8 +23,11 @@ export async function main() {
     }
     history.addMessage(userInput);
     try {
-      const response = `[echo] ${userInput}`;
-      output.write(`${response}\n`);
+      const response = await genAI.models.generateContent({
+        model: "gemini-2.0-flash",
+        contents: userInput
+      });
+      output.write(`${response.text}\n`);
 
       userInput = await readline.question("> ");
     } catch (error) {
