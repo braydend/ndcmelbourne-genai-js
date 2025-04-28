@@ -23,12 +23,16 @@ export async function main() {
     }
     history.addMessage(userInput);
     try {
-      const response = await genAI.models.generateContent({
+      const response = await genAI.models.generateContentStream({
         model: "gemini-2.0-flash",
         contents: userInput
       });
-      output.write(`${response.text}\n`);
 
+      for await (const chunk of response) {
+        if (chunk.text) {
+          output.write(`${chunk.text}\n`);
+        }
+      }
       userInput = await readline.question("> ");
     } catch (error) {
       if (error instanceof Error) {
