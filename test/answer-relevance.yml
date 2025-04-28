@@ -1,0 +1,27 @@
+# yaml-language-server: $schema=https://promptfoo.dev/config-schema.json
+description: "Answer Relevance tests"
+
+prompts:
+  - |
+    You're a helpful assistant. Answer the question based on the context provided.
+
+    Context: {{context}}
+
+    Question: {{query}}
+
+    Answer:
+
+providers:
+  - google:gemini-2.0-flash
+
+tests:
+  - vars:
+      query: I forgot my password. How do I reset it?
+      context: To reset your password, go to the login page and click the 'Forgot Password' link. Enter your email address and follow the instructions in the email we send you. Please note that the password reset link will expire after 24 hours.
+    assert:
+      - type: answer-relevance
+  - vars:
+      query: I forgot my password. How do I reset it?
+      context: We offer standard and expedited shipping. Standard shipping typically takes 3-5 business days, while expedited shipping takes 1-2 business days. Shipping costs vary depending on the destination and the weight of your order. You can find more detailed information on our shipping policy page.
+    assert:
+      - type: answer-relevance

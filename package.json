@@ -1,0 +1,36 @@
+{
+  "name": "build-with-genai-workshop",
+  "version": "1.0.0",
+  "main": "./src/index.js",
+  "bin": {
+    "agent": "./bin/agent.js"
+  },
+  "scripts": {
+    "check": "npm run lint && npm run format:check",
+    "format": "prettier --write ./src",
+    "format:check": "prettier --check ./src",
+    "lint": "eslint ./src",
+    "start": "node --no-deprecation --env-file-if-exists=.env ./bin/agent.js",
+    "dev": "node --no-deprecation --env-file-if-exists=.env --watch --watch-preserve-output ./bin/agent.js",
+    "test": "node --env-file=.env --test test/**/*.test.js",
+    "test:promptfoo": "promptfoo eval -c ./test/evals.yml --env-file=.env",
+    "promptfoo:examples": "promptfoo eval --env-file=.env",
+    "promptfoo:ui": "promptfoo view"
+  },
+  "keywords": [],
+  "author": "Phil Nash <philnash@gmail.com> (https://philna.sh/)",
+  "license": "MIT",
+  "type": "module",
+  "description": "",
+  "devDependencies": {
+    "@eslint/js": "^9.24.0",
+    "eslint": "^9.24.0",
+    "globals": "^16.0.0",
+    "prettier": "^3.5.3",
+    "promptfoo": "^0.111.1"
+  },
+  "dependencies": {
+    "@datastax/astra-db-ts": "^2.0.1",
+    "@google/genai": "^0.8.0"
+  }
+}

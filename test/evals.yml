@@ -1,0 +1,36 @@
+# yaml-language-server: $schema=https://promptfoo.dev/config-schema.json
+
+# Learn more about building a configuration: https://promptfoo.dev/docs/configuration/guide
+
+description: "My eval"
+
+providers:
+  - "google:gemini-2.0-flash"
+
+prompts:
+  - |
+    Answer this question: {{query}}
+    Using this context: {{context}}
+
+tests:
+  - vars:
+      query: "What is the capital of France?"
+      context: "Paris is the capital and largest city of France. With an estimated population of 2,048,472."
+      value: "Paris is the capital of France."
+
+    assert:
+      - type: context-faithfulness
+        threshold: 0.9
+
+      # - type: context-recall
+      #   threshold: 0.9
+      #   value: "Paris is the capital of France"
+
+      - type: context-relevance
+        threshold: 0.7
+
+      - type: factuality
+        value: "Paris"
+
+      - type: answer-relevance
+        threshold: 0.7
