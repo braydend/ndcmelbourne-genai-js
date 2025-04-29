@@ -15,9 +15,12 @@ export const collection = db.collection(ASTRA_DB_COLLECTION_NAME);
 export const search = async (prompt) => {
   const embeddedPrompt = await embed(prompt);
 
-  const cursor = collection.find({}, { sort:{ $vector: embeddedPrompt}, limit: 5 });
+  const cursor = collection.find({}, { sort:{ $vector: embeddedPrompt}, limit: 5, includeSimilarity: true });
 
+  const results = [];
   for await (const doc of cursor) {
-    console.log(doc.content);
+    results.push(doc.content);
   }
+
+  return results;
 };
