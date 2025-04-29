@@ -1,5 +1,6 @@
 import { DataAPIClient } from "@datastax/astra-db-ts";
 import { env } from "node:process";
+import {embed} from "./embedding.js";
 
 const {
   ASTRA_DB_API_ENDPOINT,
@@ -10,3 +11,13 @@ const {
 const client = new DataAPIClient(ASTRA_DB_APPLICATION_TOKEN);
 const db = client.db(ASTRA_DB_API_ENDPOINT);
 export const collection = db.collection(ASTRA_DB_COLLECTION_NAME);
+
+export const search = async (prompt) => {
+  const embeddedPrompt = await embed(prompt);
+
+  const cursor = collection.find({}, { sort:{ $vector: embeddedPrompt}, limit: 5 });
+
+  for await (const doc of cursor) {
+    console.log(doc.content);
+  }
+};

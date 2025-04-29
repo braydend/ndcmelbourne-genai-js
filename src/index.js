@@ -3,6 +3,7 @@ import { createInterface } from "node:readline/promises";
 
 import { History } from "./history.js";
 import {Bot} from "./bot.js";
+import {search} from "./db.js";
 
 export async function main() {
   const history = new History();
@@ -23,6 +24,14 @@ export async function main() {
       continue;
     }
     history.addMessage(userInput);
+
+    if (userInput.toLowerCase().startsWith("search:")) {
+        const searchQuery = userInput.slice(7).trim();
+        await search(searchQuery);
+        userInput = await readline.question("> ");
+        continue;
+    }
+
     try {
       const response = await chat.sendMessageStream(userInput);
 
