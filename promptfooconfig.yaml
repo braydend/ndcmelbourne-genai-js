@@ -7,6 +7,7 @@ description: "My eval"
 prompts:
   - "Write a tweet about {{topic}}"
   - "Write a concise, funny tweet about {{topic}}"
+  - "Write a haiku about {{topic}}"
 
 providers:
   - "google:gemini-2.0-flash"
@@ -35,3 +36,12 @@ tests:
       # For more information on model-graded evals, see https://promptfoo.dev/docs/configuration/expected-outputs/model-graded
       - type: llm-rubric
         value: ensure that the output is funny
+        provider: google:gemini-2.0-flash
+
+
+  - vars:
+      topic: koalas
+    assert:
+      - type: llm-rubric
+        value: ensure that the is a correctly structured haiku
+        provider: google:gemini-2.0-flash
