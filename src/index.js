@@ -2,7 +2,7 @@ import { stdin as input, stdout as output } from "node:process";
 import { createInterface } from "node:readline/promises";
 
 import { History } from "./history.js";
-import {genAI} from "./bot.js";
+import {Bot} from "./bot.js";
 
 export async function main() {
   const history = new History();
@@ -13,6 +13,7 @@ export async function main() {
     history: history.messages.toReversed(),
     removeHistoryDuplicates: true,
   });
+  const chat = new Bot();
 
   let userInput = await readline.question("> ");
 
@@ -23,16 +24,15 @@ export async function main() {
     }
     history.addMessage(userInput);
     try {
-      const response = await genAI.models.generateContentStream({
-        model: "gemini-2.0-flash",
-        contents: userInput
-      });
+      const response = await chat.sendMessageStream(userInput);
 
       for await (const chunk of response) {
         if (chunk.text) {
-          output.write(`${chunk.text}\n`);
+          output.write(`${chunk.text}`);
         }
       }
+
+      output.write("\n");
       userInput = await readline.question("> ");
     } catch (error) {
       if (error instanceof Error) {
