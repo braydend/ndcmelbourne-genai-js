@@ -32,6 +32,27 @@ export async function main() {
         continue;
     }
 
+    if (userInput.toLowerCase().startsWith("help:")) {
+      const searchQuery = userInput.slice(7).trim();
+      const context = (await search(searchQuery)).join("\n");
+      const prompt = `
+        Given the following context
+        ---
+        ${context}
+        ---
+        
+        Answer the given question:
+        ---
+        ${searchQuery}
+        ---
+        
+        If you don't know the answer, say "Sorry, I don't know"
+      `;
+
+      // Set new prompt to the user input to it can fall through to the chat
+      userInput = prompt;
+    }
+
     try {
       const response = await chat.sendMessageStream(userInput);
 
